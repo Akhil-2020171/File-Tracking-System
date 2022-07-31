@@ -118,22 +118,6 @@ void setup1(){
    Serial.println("Writing to Data Block...");
    WriteDataToBlock(blockNum, blockData);
    //------------------------------------------------------------------------------
-   /* Read data from the same block */
-   Serial.print("\n");
-   Serial.println("Reading from Data Block...");
-   ReadDataFromBlock(blockNum, readBlockData);
-   /* If you want to print the full memory dump, uncomment the next line */
-   //mfrc522.PICC_DumpToSerial(&(mfrc522.uid));
-   //------------------------------------------------------------------------------
-   /* Print the data read from block */
-   Serial.print("\n");
-   Serial.print("Data in Block:");
-   Serial.print(blockNum);
-   Serial.print(" --> ");
-   
-   for (int j=0 ; j<16 ; j++){
-     Serial.write(readBlockData[j]);
-   }
    Serial.print("\n");
    //------------------------------------------------------------------------------
 }
