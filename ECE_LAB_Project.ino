@@ -35,13 +35,13 @@ byte readBlockData[18];
 //-----------------------------------------
 String card_holder_name;
 String card_uid;
-const String sheet_url = "https://script.google.com/macros/s/AKfycbwVQOixA-76bg2PFWN7jNPjone9rr4CGuTvr3UvsXhQsHqA5UzH1fSq8hn494kg2gaO/exec";
+const String sheet_url = "Google_Sheet_App_Sript_Url";
 //-----------------------------------------
-const uint8_t fingerprint[20] = {0xc1,0x28,0xb0,0x5e,0xf8,0x50,0x51,0x3c,0x3e,0x18,0x38,0xc4,0x87,0x9f,0xdd,0xde,0x5b,0xc4,0x00,0x77};
+const uint8_t fingerprint[20] = {0xc1,0x28,0xb0,0x78,0x36,0x14,0xab,0x3c,0x3e,0x18,0x38,0xc4,0x87,0x9f,0xdd,0xde,0x5b,0xc4,0x00,0x77};
 //-----------------------------------------
 //-----------------------------------------
-#define WIFI_SSID "SharmaVS"
-#define WIFI_PASSWORD "Akhil@1234"
+#define WIFI_SSID "Wifi_SSID_Name"
+#define WIFI_PASSWORD "Wifi_Password"
 //-----------------------------------------
 
 void setup(){
