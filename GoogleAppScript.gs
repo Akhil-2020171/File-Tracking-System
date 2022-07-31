@@ -1,4 +1,4 @@
-var ss = SpreadsheetApp.openById('1D7anoT2c3DBEl1dOeI2XKChWsCiR6rV04ZIZS5nq2uw');
+var ss = SpreadsheetApp.openById('Google_Sheet_ID');
 var sheet = ss.getActiveSheet();
 var timezone = Session.getScriptTimeZone();
 Logger.log(timezone);
