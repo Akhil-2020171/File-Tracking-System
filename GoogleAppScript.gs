@@ -15,35 +15,25 @@ function doGet(e){
   var Deploy_Date = new Date();
   var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'HH:mm:ss');
   var Reader_name = stripQuotes(e.parameters.name);
-  var ID = stripQuotes(e.parameters.id).toString();
+  var ID = stripQuotes(e.parameters.id);
 
-  var vaules = sheet.getRange("A2:A").getValues()[0];
-  var index = -1;
-  for(var i = 0; i<vaules.length ; i++){
-    if(vaules[i].toString().match(ID)){
-      index = i;
-      break;
-    }
-  }
-  
+  var index = onSearch(ID);
   //----------------------------------------------------------------------------------
   if(index==-1){
-    var nextRow = sheet.getLastRow() + 1;
+    var nextRow = sheet.getLastRow() + 2;
     sheet.getRange("A" + nextRow).setValue(ID);
     sheet.getRange("B" + nextRow).setValue(Deploy_Date);
     sheet.getRange("C" + nextRow).setValue(Deploy_Time);
     sheet.getRange("D" + nextRow).setValue(Reader_name);
   
   //----------------------------------------------------------------------------------
-    
     return ContentService.createTextOutput("Reader name is stored in column B C D");
-  
   //----------------------------------------------------------------------------------
   
   }
   else if(index!=-1){
-    var val = sheet.getRange(index+1,6,10,3).getValues()[0];
-    var ct = 1;
+    var val = sheet.getRange(index+2,6,10,1).getValues()[0];
+    var ct = index;
     while ( val[ct] != "" ) {ct++;}
 
   //----------------------------------------------------------------------------------
@@ -57,23 +47,36 @@ function doGet(e){
     sheet.getRange("G"+ct).setValue(Receiving_Time);
     sheet.getRange("H"+ct).setValue(Receiving_Dept);
     sheet.insertRowAfter(sheet.getLastRow());
-  //----------------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------------
     return ContentService.createTextOutput("Receiving Data is stored in column F G H");
   //---------------------------------------------------------------------------------- 
   }
-
 }
 
 function stripQuotes( value ) {
   return value.toString().replace(/^["']|['"]$/g, "");
 }
 
-// function doPost(e) {
-//   var val = e.parameter.value;
-  
-//   if (e.parameter.value !== undefined){
-//     var range = sheet.getRange('A2');
-//     range.setValue(val);
-//   }
-// }
+function onSearch(id){
+    var searchString = id.toString();
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1"); 
+    var column = 1; //column Index   
+    var columnValues = sheet.getRange(2, column, sheet.getLastRow()).getValues(); //1st is header row
+    var searchResult = columnValues.findIndex(searchString); //Row Index - 2
+
+    if(searchResult != -1){
+        //searchResult + 2 is row index.
+        sheet.setActiveRange(sheet.getRange(searchResult + 2, 1))
+    }
+
+    return searchResult;
+}
+
+Array.prototype.findIndex = function(search){
+  if(search == "") return false;
+  for (var i=0; i<this.length; i++)
+    if (this[i] == search) return i;
+
+  return -1;
+}
