@@ -34,10 +34,8 @@ https://randomnerdtutorials.com/esp-now-one-to-many-esp8266-nodemcu/
 
   1) Layout
   
-| ID of each  | Deploying | Deploying | Deploying  | Receiving | Receiving | Receiving  | Holding | Remarks |
-|-------------|-----------|-----------|:----------:|:---------:|:---------:|:----------:|:-------:|:-------:|
-| RFID Tag    | Date      | Time      | Department | Date      | Time      | Department | Time    |         |
-|:-----------:|:---------:|:---------:|:----------:|:---------:|:---------:|:----------:|:-------:|:-------:|
+| ID of each RFID Tag | Deploying Date | Deploying Time | Deploying Department | Receiving Date | Receiving Time | Receiving Department | Holding Time | Remarks |
+|:-------------------:|:--------------:|:--------------:|:--------------------:|:--------------:|:--------------:|:--------------------:|:------------:|:-------:|
 
   2) Working 
 
