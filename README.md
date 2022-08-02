@@ -46,3 +46,4 @@ Second if a particular UID is already present then we add the reading details to
 # Additional features 
 
 Working on digital displays for every NodeMCU action (particular actions like reading data or writing data) and buzzers as well.
+https://randomnerdtutorials.com/esp8266-0-96-inch-oled-display-with-arduino-ide/
