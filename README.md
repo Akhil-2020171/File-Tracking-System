@@ -26,6 +26,25 @@ Below is the Circuit Diagram (Buzzer is not compulsory):
    8. Holding Time of a particular Department
    9. Remarks
 
-# Advance : Creating a hub for sending data over wifi to multiple NodeMCU from one 
+# Advance : Creating a hub for sending data over wifi to multiple NodeMCU from one head NodeMCU
 
 https://randomnerdtutorials.com/esp-now-one-to-many-esp8266-nodemcu/ 
+
+# Google Sheet work Description 
+
+  1) Layout
+  
+| ID of each  | Deploying | Deploying | Deploying  | Receiving | Receiving | Receiving  | Holding | Remarks |
+|-------------|-----------|-----------|:----------:|:---------:|:---------:|:----------:|:-------:|:-------:|
+| RFID Tag    | Date      | Time      | Department | Date      | Time      | Department | Time    |         |
+|:-----------:|:---------:|:---------:|:----------:|:---------:|:---------:|:----------:|:-------:|:-------:|
+
+  2) Working 
+
+RFID-RC522 will read the tag as it comes at its proximity.  On its read , it will definitely read the unique ID of that tag and data stored in it. Every NodeMCU will store the Department name to its corresponding department setup location. 
+If there is no entry of such UID in google sheet then it will add that particular UID in the deploying side of the google sheet because we are assuming if no particular UID is present in the google sheet that means it hasn’t been deployed by any department.
+Second if a particular UID is already present then we add the reading details to its receiving side of the google sheet. And a particular remark for UID will decide if that UID can be reused again or not.
+
+# Additional features 
+
+Working on digital displays for every NodeMCU action (particular actions like reading data or writing data) and buzzers as well.
