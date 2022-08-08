@@ -1,11 +1,9 @@
-var ss = SpreadsheetApp.openById('Google_Sheet_ID');
+var ss = SpreadsheetApp.openById('1D7anoT2c3DBEl1dOeI2XKChWsCiR6rV04ZIZS5nq2uw');
 var sheet = ss.getActiveSheet();
 var timezone = Session.getScriptTimeZone();
-Logger.log(timezone);
 
 function doGet(e){
-  Logger.log( JSON.stringify(e) );
-  
+
   //get gps data from ESP32
   if (e.parameter == 'undefined') {
     return ContentService.createTextOutput("Deployed data is undefined");
@@ -16,8 +14,8 @@ function doGet(e){
   var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'HH:mm:ss');
   var Reader_name = stripQuotes(e.parameters.name);
   var ID = stripQuotes(e.parameters.id);
-
   var index = onSearch(ID);
+
   //----------------------------------------------------------------------------------
   if(index==-1){
     var nextRow = sheet.getLastRow() + 2;
@@ -32,24 +30,30 @@ function doGet(e){
   
   }
   else if(index!=-1){
-    var val = sheet.getRange(index+2,6,10,1).getValues()[0];
-    var ct = index;
-    while ( val[ct] != "" ) {ct++;}
+    var value = sheet.getRange("F"+index);
+    if(!value.isBlank()){
+      var tempIndex = index+1;
+      sheet.insertRowAfter(index);
+      sheet.getRange("F"+index + ":" + "I"+index).copyValuesToRange(sheet.getRange("F"+index + ":" + "I"+index).getGridId(),6,10,tempIndex,tempIndex);
+      sheet.getRange("F"+index + ":" + "I"+index).clearContent();
+    }
 
   //----------------------------------------------------------------------------------
     var Receiving_Date = new Date();
     var Receiving_Time = Utilities.formatDate(Receiving_Date, timezone, 'HH:mm:ss');
     var Receiving_Dept = stripQuotes(e.parameters.name);
-    
+    var T1 = sheet.getRange("C" + index).getValue();
+    var T2 = sheet.getRange("G" + index).getValue();
+    var Holding_Time = T2-T1;
   //----------------------------------------------------------------------------------
-    sheet.getRange("E"+ct).setValue(index);
-    sheet.getRange("F"+ct).setValue(Receiving_Date);
-    sheet.getRange("G"+ct).setValue(Receiving_Time);
-    sheet.getRange("H"+ct).setValue(Receiving_Dept);
-    sheet.insertRowAfter(sheet.getLastRow());
+
+    sheet.getRange("F" + index).setValue(Receiving_Date);
+    sheet.getRange("G" + index).setValue(Receiving_Time);
+    sheet.getRange("H" + index).setValue(Receiving_Dept);
+    sheet.getRange("I" + index).setValue(Holding_Time);
 
   //----------------------------------------------------------------------------------
-    return ContentService.createTextOutput("Receiving Data is stored in column F G H");
+    return ContentService.createTextOutput("Receiving Data is stored in column F G H I");
   //---------------------------------------------------------------------------------- 
   }
 }
@@ -60,14 +64,15 @@ function stripQuotes( value ) {
 
 function onSearch(id){
     var searchString = id.toString();
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1"); 
+    var Sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1"); 
     var column = 1; //column Index   
-    var columnValues = sheet.getRange(2, column, sheet.getLastRow()).getValues(); //1st is header row
+    var columnValues = Sheet.getRange(2, column, Sheet.getLastRow()).getValues(); //1st is header row
     var searchResult = columnValues.findIndex(searchString); //Row Index - 2
 
     if(searchResult != -1){
         //searchResult + 2 is row index.
-        sheet.setActiveRange(sheet.getRange(searchResult + 2, 1))
+        //Sheet.setActiveRange(Sheet.getRange(searchResult + 2, 1))
+        return searchResult + 2;
     }
 
     return searchResult;
