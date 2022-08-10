@@ -11,7 +11,7 @@ function doGet(e){
 
   //----------------------------------------------------------------------------------
   var Deploy_Date = new Date();
-  var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'HH:mm:ss');
+  var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'hh:mm:ss');
   var Reader_name = stripQuotes(e.parameters.name);
   var ID = stripQuotes(e.parameters.id);
   var index = onSearch(ID);
@@ -23,34 +23,49 @@ function doGet(e){
     sheet.getRange("B" + nextRow).setValue(Deploy_Date);
     sheet.getRange("C" + nextRow).setValue(Deploy_Time);
     sheet.getRange("D" + nextRow).setValue(Reader_name);
+    sheet.getRange("E" + nextRow).setValue(0);
   
   //----------------------------------------------------------------------------------
-    return ContentService.createTextOutput("Reader name is stored in column B C D");
+    return ContentService.createTextOutput("Reader name is stored in column B C D E");
   //----------------------------------------------------------------------------------
   
   }
   else if(index!=-1){
+    var entry = +sheet.getRange("E" + index).getValue();
+    sheet.getRange("E" + index).setValue(entry+1);
+
     var value = sheet.getRange("F"+index);
+
     if(!value.isBlank()){
       var tempIndex = index+1;
       sheet.insertRowAfter(index);
-      sheet.getRange("F"+index + ":" + "I"+index).copyValuesToRange(sheet.getRange("F"+index + ":" + "I"+index).getGridId(),6,10,tempIndex,tempIndex);
-      sheet.getRange("F"+index + ":" + "I"+index).clearContent();
+      sheet.getRange("F"+index+":"+"I"+index).copyValuesToRange(sheet.getRange("F"+index+":"+"I"+index).getGridId(),6,10,tempIndex,tempIndex);
+      sheet.getRange("F"+index+":"+"I"+index).clearContent();
     }
 
   //----------------------------------------------------------------------------------
     var Receiving_Date = new Date();
-    var Receiving_Time = Utilities.formatDate(Receiving_Date, timezone, 'HH:mm:ss');
+    var Receiving_Time = Utilities.formatDate(Receiving_Date, timezone, 'hh:mm:ss');
     var Receiving_Dept = stripQuotes(e.parameters.name);
-    var T1 = sheet.getRange("C" + index).getValue();
-    var T2 = sheet.getRange("G" + index).getValue();
-    var Holding_Time = T2-T1;
-  //----------------------------------------------------------------------------------
 
+  //----------------------------------------------------------------------------------
     sheet.getRange("F" + index).setValue(Receiving_Date);
     sheet.getRange("G" + index).setValue(Receiving_Time);
     sheet.getRange("H" + index).setValue(Receiving_Dept);
-    sheet.getRange("I" + index).setValue(Holding_Time);
+
+    var tempIndex = +index+1;
+    if(sheet.getRange("G" + tempIndex).isBlank()) sheet.getRange("I" + index).setValue('=(G' + index + '-' + 'C' + index + ')');
+    else sheet.getRange("I" + index).setValue('=(G' + index + '-' + 'G' + tempIndex + ')');
+
+    var Dept1 = sheet.getRange("D"+index).getValue();
+    var Dept2 = sheet.getRange("H"+index).getValue();
+
+    if(Dept1 == Dept2){
+      var lastIndex = +sheet.getRange("E"+index).getValue();
+      sheet.getRange("A"+index).setValue(sheet.getRange("A"+index).getValue()+"/F");
+      sheet.getRange(index,1,lastIndex,9).setBackground("#FF33F0");
+      //sheet.getRange("J"+lastIndex).setBackground("#9f941a");
+    } 
 
   //----------------------------------------------------------------------------------
     return ContentService.createTextOutput("Receiving Data is stored in column F G H I");
