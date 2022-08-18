@@ -1,17 +1,16 @@
-var ss = SpreadsheetApp.openById('1D7anoT2c3DBEl1dOeI2XKChWsCiR6rV04ZIZS5nq2uw');
+var ss = SpreadsheetApp.openById('Sheet ID');
 var sheet = ss.getActiveSheet();
 var timezone = Session.getScriptTimeZone();
 
 function doGet(e){
 
-  //get gps data from ESP32
   if (e.parameter == 'undefined') {
     return ContentService.createTextOutput("Deployed data is undefined");
   }
 
   //----------------------------------------------------------------------------------
   var Deploy_Date = new Date();
-  var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'hh:mm:ss');
+  var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'HH:mm:ss');
   var Reader_name = stripQuotes(e.parameters.name);
   var ID = stripQuotes(e.parameters.id);
   var index = onSearch(ID);
@@ -20,9 +19,9 @@ function doGet(e){
   if(index==-1){
     var nextRow = sheet.getLastRow() + 2;
     sheet.getRange("A" + nextRow).setValue(ID);
-    sheet.getRange("B" + nextRow).setValue(Deploy_Date);
-    sheet.getRange("C" + nextRow).setValue(Deploy_Time);
-    sheet.getRange("D" + nextRow).setValue(Reader_name);
+    sheet.getRange("B" + nextRow).setValue(Reader_name);
+    sheet.getRange("C" + nextRow).setValue(Deploy_Date);
+    sheet.getRange("D" + nextRow).setValue(Deploy_Time);
     sheet.getRange("E" + nextRow).setValue(0);
   
   //----------------------------------------------------------------------------------
@@ -45,26 +44,25 @@ function doGet(e){
 
   //----------------------------------------------------------------------------------
     var Receiving_Date = new Date();
-    var Receiving_Time = Utilities.formatDate(Receiving_Date, timezone, 'hh:mm:ss');
+    var Receiving_Time = Utilities.formatDate(Receiving_Date, timezone, 'HH:mm:ss');
     var Receiving_Dept = stripQuotes(e.parameters.name);
 
   //----------------------------------------------------------------------------------
-    sheet.getRange("F" + index).setValue(Receiving_Date);
-    sheet.getRange("G" + index).setValue(Receiving_Time);
-    sheet.getRange("H" + index).setValue(Receiving_Dept);
+    sheet.getRange("F" + index).setValue(Receiving_Dept);
+    sheet.getRange("G" + index).setValue(Receiving_Date);
+    sheet.getRange("H" + index).setValue(Receiving_Time);
 
     var tempIndex = +index+1;
-    if(sheet.getRange("G" + tempIndex).isBlank()) sheet.getRange("I" + index).setValue('=(G' + index + '-' + 'C' + index + ')');
-    else sheet.getRange("I" + index).setValue('=(G' + index + '-' + 'G' + tempIndex + ')');
+    if(sheet.getRange("H" + tempIndex).isBlank()) sheet.getRange("I" + index).setFormula('=(G' + index + '-' + 'C' + index + ')');
+    else sheet.getRange("I" + index).setFormula('=(G' + index + '-' + 'G' + tempIndex + ')');
 
-    var Dept1 = sheet.getRange("D"+index).getValue();
-    var Dept2 = sheet.getRange("H"+index).getValue();
+    var Dept1 = sheet.getRange("B"+index).getValue();
+    var Dept2 = sheet.getRange("F"+index).getValue();
 
     if(Dept1 == Dept2){
       var lastIndex = +sheet.getRange("E"+index).getValue();
       sheet.getRange("A"+index).setValue(sheet.getRange("A"+index).getValue()+"/F");
       sheet.getRange(index,1,lastIndex,9).setBackground("#FF33F0");
-      //sheet.getRange("J"+lastIndex).setBackground("#9f941a");
     } 
 
   //----------------------------------------------------------------------------------
