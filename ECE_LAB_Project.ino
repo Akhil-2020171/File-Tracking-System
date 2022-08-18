@@ -1,10 +1,3 @@
-/* Download Resources
- * ------------------------------------------------------------------------
- * Preferences--> Aditional boards Manager URLs : 
- * For ESP8266 and NodeMCU - Version 3.0.2
- * http://arduino.esp8266.com/stable/package_esp8266com_index.json
- * ------------------------------------------------------------------------*/
-
 #include <SPI.h>
 #include <MFRC522.h>
 #include <Arduino.h>
@@ -13,10 +6,21 @@
 #include <WiFiClient.h>
 #include <WiFiClientSecureBearSSL.h>
 
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+
+#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
 //-----------------------------------------
 constexpr uint8_t RST_PIN = D3;
 constexpr uint8_t SS_PIN = D4;
-constexpr uint8_t BUZZER = D2;
+//constexpr uint8_t BUZZER = D2;
 //-----------------------------------------
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key;  
@@ -35,13 +39,13 @@ byte readBlockData[18];
 //-----------------------------------------
 String card_holder_name;
 String card_uid;
-const String sheet_url = "Google_Sheet_App_Sript_Url";
+const String sheet_url = "script url + ?";
 //-----------------------------------------
-const uint8_t fingerprint[20] = {0xc1,0x28,0xb0,0x78,0x36,0x14,0xab,0x3c,0x3e,0x18,0x38,0xc4,0x87,0x9f,0xdd,0xde,0x5b,0xc4,0x00,0x77};
+const uint8_t fingerprint[20] = {0xc2,0x29,0xb0,0x5e,0xf8,0x50,0x51,0x3c,0x3e,0x18,0x38,0xc4,0x87,0x9f,0xdd,0xde,0x5b,0xc4,0x00,0x77};
 //-----------------------------------------
 //-----------------------------------------
-#define WIFI_SSID "Wifi_SSID_Name"
-#define WIFI_PASSWORD "Wifi_Password"
+#define WIFI_SSID "realme"
+#define WIFI_PASSWORD "1234@1234"
 //-----------------------------------------
 
 void setup(){
@@ -68,11 +72,24 @@ void setup(){
   Serial.println(WiFi.macAddress());
   Serial.println();
   //--------------------------------------------------
+  
+  if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;);
+  }
 }
 
 void loop(){ 
   //Initialize MFRC522 Module
   mfrc522.PCD_Init();
+  
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.println("Scan");
+  display.display();
+  
   setup1();
   setup2();
 }
@@ -120,6 +137,15 @@ void setup1(){
    //------------------------------------------------------------------------------
    Serial.print("\n");
    //------------------------------------------------------------------------------
+  
+  display.clearDisplay();
+  display.setTextSize(1.5);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.println("Data has been written inside the Tag.");
+  display.display();
+  delay(500);
+  display.clearDisplay();
 }
 
 // Writer Code in Google Sheets//
@@ -155,7 +181,7 @@ void setup1(){
     //-------------------------------------------------------------------------------
     client->setFingerprint(fingerprint);
     //-----------------------------------------------------------------
-    card_holder_name = sheet_url +"?id=" + card_uid +"&name="+String((char*)readBlockData);
+    card_holder_name = sheet_url +"id=" + card_uid +"&name="+String((char*)readBlockData);
     card_holder_name.trim();
     Serial.println(card_holder_name);
     //-----------------------------------------------------------------
@@ -163,7 +189,7 @@ void setup1(){
     Serial.print(F("[HTTPS] begin...\n"));
     //-----------------------------------------------------------------
 
-    if (https.begin(*client, (String)card_holder_name)){
+    if (https.begin(*client,card_holder_name)){
       //-----------------------------------------------------------------
       // HTTP
       Serial.print(F("[HTTPS] GET...\n"));
@@ -175,10 +201,27 @@ void setup1(){
         // HTTP header has been send and Server response header has been handled
         Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
         // file found at server
+        display.clearDisplay();
+        display.setTextSize(1.5);
+        display.setTextColor(WHITE);
+        display.setCursor(0, 10);
+        display.println("Data has been written in the Google Sheet.");
+        display.display();
+        delay(1000);
+        display.clearDisplay();
       }
       //-----------------------------------------------------------------
-      else 
-      {Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());}
+      else {
+        Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
+        display.clearDisplay();
+        display.setTextSize(1.5);
+        display.setTextColor(WHITE);
+        display.setCursor(0, 10);
+        display.println("Data hasn't been written in the Google Sheet.");
+        display.display();
+        delay(1000);
+        display.clearDisplay();
+      }
       //-----------------------------------------------------------------
       https.end();
       delay(1000);
