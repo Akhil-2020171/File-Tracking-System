@@ -26,9 +26,9 @@ Below is the Circuit Diagram (Buzzer is not compulsory):
    8. Holding Time of a particular Department
    9. Remarks
 
-# Advance : Creating a hub for sending data over wifi to multiple NodeMCU from one head NodeMCU
+# Advance : Over the Air (Updates)
 
-https://randomnerdtutorials.com/esp-now-one-to-many-esp8266-nodemcu/ 
+https://randomnerdtutorials.com/esp8266-ota-updates-with-arduino-ide-over-the-air/
 
 # Google Sheet work Description 
 
