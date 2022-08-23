@@ -2,17 +2,35 @@ var ss = SpreadsheetApp.openById('Sheet ID');
 var sheet = ss.getActiveSheet();
 var timezone = Session.getScriptTimeZone();
 
-function doGet(e){
+function doPost(e){
 
   if (e.parameter == 'undefined') {
     return ContentService.createTextOutput("Deployed data is undefined");
   }
 
+  var parsedData;
+  
+  try { 
+    parsedData = JSON.parse(e.postData.contents);
+  } 
+  catch(f){
+    return ContentService.createTextOutput("Error in parsing request body: " + f.message);
+  }
+
+  if (parsedData !== undefined){
+    var flag = parsedData.format;
+    if (flag === undefined){
+      flag = 0;
+    }
+    var dataArr = parsedData.values.split(","); // creates an array of the values to publish 
+    var value1 = dataArr [0]; // value0 from Arduino code, id
+    var value2 = dataArr [1]; // value1 from Arduino code, name
+  }
   //----------------------------------------------------------------------------------
   var Deploy_Date = new Date();
   var Deploy_Time = Utilities.formatDate(Deploy_Date, timezone, 'HH:mm:ss');
-  var Reader_name = stripQuotes(e.parameters.name);
-  var ID = stripQuotes(e.parameters.id);
+  var ID = stripQuotes(value1);
+  var Reader_name = stripQuotes(value2);
   var index = onSearch(ID);
 
   //----------------------------------------------------------------------------------
@@ -25,6 +43,7 @@ function doGet(e){
     sheet.getRange("E" + nextRow).setValue(0);
   
   //----------------------------------------------------------------------------------
+    SpreadsheetApp.flush();
     return ContentService.createTextOutput("Reader name is stored in column B C D E");
   //----------------------------------------------------------------------------------
   
@@ -45,7 +64,7 @@ function doGet(e){
   //----------------------------------------------------------------------------------
     var Receiving_Date = new Date();
     var Receiving_Time = Utilities.formatDate(Receiving_Date, timezone, 'HH:mm:ss');
-    var Receiving_Dept = stripQuotes(e.parameters.name);
+    var Receiving_Dept = stripQuotes(value2);
 
   //----------------------------------------------------------------------------------
     sheet.getRange("F" + index).setValue(Receiving_Dept);
@@ -62,10 +81,11 @@ function doGet(e){
     if(Dept1 == Dept2){
       var lastIndex = +sheet.getRange("E"+index).getValue();
       sheet.getRange("A"+index).setValue(sheet.getRange("A"+index).getValue()+"/F");
-      sheet.getRange(index,1,lastIndex,9).setBackground("#FF33F0");
+      sheet.getRange(index,1,lastIndex,9).setBackground("#44cfbf");
     } 
 
   //----------------------------------------------------------------------------------
+    SpreadsheetApp.flush();
     return ContentService.createTextOutput("Receiving Data is stored in column F G H I");
   //---------------------------------------------------------------------------------- 
   }
