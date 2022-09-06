@@ -24,7 +24,8 @@ Below is the Circuit Diagram (Buzzer is not compulsory):
    6. Receive Date
    7. Receiving Department
    8. Holding Time of a particular Department
-   9. Remarks
+   9. Status
+   10. Transactions
 
 # Advance : Over the Air (Updates)
 
