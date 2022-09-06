@@ -9,15 +9,16 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-#define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define SCREEN_WIDTH 128    // OLED display width, in pixels
+#define SCREEN_HEIGHT 64    // OLED display height, in pixels
+#define OLED_RESET     -1   // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C // See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 //-----------------------------------------
 constexpr uint8_t RST_PIN = D3;
 constexpr uint8_t SS_PIN = D4;
 constexpr uint8_t BUZZER = D8;
+constexpr uint8_t LED = D0; 
 //-----------------------------------------
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key;  
@@ -27,13 +28,13 @@ MFRC522::StatusCode status;
 const String blockData = "ECE";
 String card_uid;          
 //-----------------------------------------
-#define WIFI_SSID "GUEST-N"
-#define WIFI_PASSWORD "cisco@2022"
+#define WIFI_SSID "FACULTY-STAFF-N"
+#define WIFI_PASSWORD "I@netsec"
 
 // Google Sheets setup (do not edit)
 const char* HOST = "script.google.com";
 const int httpsPort = 443;
-String sheet_url = "/macros/s/AKfycbyWhEUR8LQkKpDRni9nADBQ1doO4R4OakPp4AMnnuIg9N9pOQ_RWDkY1-DWw4dUNJBt/exec";
+String sheet_url = "/macros/s/AKfycbzHZ4l7rBVs1s76un4GPaQEWgYalSedLDjEcOf6MqpVKhXy-_CkmHDM4KI6dLCai0cf/exec";
 HTTPSRedirect* client = nullptr;
 String payload_base =  "{\"values\": ";
 String payload = "";
@@ -46,8 +47,9 @@ void setup(){
   //Initialize SPI bus
   SPI.begin();
   //--------------------------------------------------
-  /* Set BUZZER as OUTPUT */
+  /* Set BUZZER and LED as OUTPUT */
   pinMode(BUZZER, OUTPUT);
+  pinMode(LED,OUTPUT);
   //--------------------------------------------------
   
   //WiFi Connectivity
@@ -158,6 +160,7 @@ void loop(){
   //------------------------------------------------------------------------------
   Serial.print("\n");
   Serial.println("**Card Detected**");
+  digitalWrite(LED,HIGH);
   /* Print UID of the Card */
   Serial.print(F("Card UID:"));
   
@@ -202,18 +205,22 @@ void loop(){
   Serial.println("Publishing data...");
   Serial.println(payload);
   if(client->POST(sheet_url, HOST, payload)){ 
-    Serial.println("Successful Connection : Data has been transferred to Google Sheets.");
-    display.clearDisplay();
-    display.setTextSize(1.5);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 10);
-    display.println("Data has been written in the Google Sheet.");
-    display.display();
+    digitalWrite(LED,LOW);
     digitalWrite(BUZZER, HIGH);
     delay(1000);
-    digitalWrite(BUZZER, LOW);
-    delay(1000);
+    Serial.println("Successful Connection : Data has been transferred to Google Sheets.");
     display.clearDisplay();
+    display.setTextSize(2);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 10);
+    display.println("DONE");
+    display.display();
+    delay(500);
+    display.println(card_uid);
+    display.display();
+    digitalWrite(BUZZER, LOW);
+    display.clearDisplay();
+    delay(1000);
   }
   else{
     Serial.println("Error while connecting");
