@@ -1,10 +1,10 @@
 # File-Tracking-System
 
 ## Components Requirement : 
-  -NodeMCU (ESP8266MOD) 
-  -RFID-RC522 
-  -RFID tags
-  -Jumper wires
+  - NodeMCU (ESP8266MOD) 
+  - RFID-RC522 
+  - RFID tags
+  - Jumper wires
 
 ## Circuit Diagram (Buzzer is not compulsory):
   ![image](https://drive.google.com/uc?export=view&id=1uW2rYJLGlRNlYZ-IXklyP4lxCPuKpk8a)
