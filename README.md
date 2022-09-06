@@ -31,11 +31,9 @@
    9. Status
    10. Transactions
 
-## Advance Feature: 
-  - Over the Air (Updates)
+## Advance Features: 
+  - Over the Air (Updates)[https://randomnerdtutorials.com/esp8266-ota-updates-with-arduino-ide-over-the-air/]
   - Email Notification
-
-https://randomnerdtutorials.com/esp8266-ota-updates-with-arduino-ide-over-the-air/
 
 ## Google Sheet work Description 
 
