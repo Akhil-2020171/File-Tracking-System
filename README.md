@@ -34,8 +34,8 @@ https://randomnerdtutorials.com/esp8266-ota-updates-with-arduino-ide-over-the-ai
 
   1) Layout
   
-| ID of each RFID Tag | Deploying Date | Deploying Time | Deploying Department | Receiving Date | Receiving Time | Receiving Department | Holding Time | Remarks |
-|:-------------------:|:--------------:|:--------------:|:--------------------:|:--------------:|:--------------:|:--------------------:|:------------:|:-------:|
+| ID of each RFID Tag | Deploying Department | Deploying Date | Deploying Time | Transactions | Receiving Department | Receiving Date | Receiving Time | Holding Time | Status |
+|:-------------------:|:--------------------:|:--------------:|:--------------:|:------------:|:--------------------:|:--------------:|:--------------:|:-----------:|:------:|
 
   2) Working 
 
