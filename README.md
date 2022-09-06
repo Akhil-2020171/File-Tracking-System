@@ -32,7 +32,7 @@
    10. Transactions
 
 ## Advance Features: 
-  - Over the Air (Updates)[https://randomnerdtutorials.com/esp8266-ota-updates-with-arduino-ide-over-the-air/]
+  - Over the Air [Updates](https://randomnerdtutorials.com/esp8266-ota-updates-with-arduino-ide-over-the-air/)
   - Email Notification
 
 ## Google Sheet work Description 
