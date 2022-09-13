@@ -8,7 +8,35 @@
 
 ## Circuit Diagram (Buzzer is not compulsory):
   ![alt text](RFID.png)
-  
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
+
+&nbsp;
 ## Arduino Code contains majorly two functions:
    1. Reader Function which reads the UID of a particular RFID tag and the data written inside that particular tag. If there is no data in the RFID tag then this   
       function will write required data as well.
