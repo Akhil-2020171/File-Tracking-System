@@ -7,7 +7,7 @@
   - Jumper wires
 
 ## Circuit Diagram (Buzzer is not compulsory):
-  ![image](https://drive.google.com/uc?export=view&id=1uW2rYJLGlRNlYZ-IXklyP4lxCPuKpk8a)
+  ![alt text](RFID.png)
   
 ## Arduino Code contains majorly two functions:
    1. Reader Function which reads the UID of a particular RFID tag and the data written inside that particular tag. If there is no data in the RFID tag then this   
