@@ -19,13 +19,15 @@ constexpr uint8_t RST_PIN = D3;
 constexpr uint8_t SS_PIN = D4;
 constexpr uint8_t BUZZER = D8;
 constexpr uint8_t LED = D0; 
+
 //-----------------------------------------
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key;  
 MFRC522::StatusCode status;      
 //-----------------------------------------
 /* This is the actual data which is going to be written into the card */
-const String blockData = "ECE";
+const String blockData = "AdminSP";
+//const String blockData = "AdminFA";
 String card_uid;          
 //-----------------------------------------
 #define WIFI_SSID "FACULTY-STAFF-N"
@@ -34,7 +36,7 @@ String card_uid;
 // Google Sheets setup (do not edit)
 const char* HOST = "script.google.com";
 const int httpsPort = 443;
-String sheet_url = "/macros/s/AKfycbzHZ4l7rBVs1s76un4GPaQEWgYalSedLDjEcOf6MqpVKhXy-_CkmHDM4KI6dLCai0cf/exec";
+String sheet_url = "/macros/s/AKfycby3ZPtmwHeU6SdLjsDpj-ofBVB4ihNQ_R1WuFSoI_FAUoDPbXuiTAHJuBaCGjaPpbFg/exec";
 HTTPSRedirect* client = nullptr;
 String payload_base =  "{\"values\": ";
 String payload = "";
@@ -50,6 +52,8 @@ void setup(){
   /* Set BUZZER and LED as OUTPUT */
   pinMode(BUZZER, OUTPUT);
   pinMode(LED,OUTPUT);
+
+  delay(500);
   //--------------------------------------------------
   
   //WiFi Connectivity
@@ -127,6 +131,7 @@ void setup(){
   }
   //-------------------------------------------------
   Serial.println("Scan a MIFARE 1K Tag to Detect data...");
+  delay(500);
 }
 
 void loop(){   
@@ -138,8 +143,8 @@ void loop(){
   display.setCursor(0, 10);
   display.println("Scan");
   display.display();
-  
-  setup2();
+   
+  setup2(); 
 }
 
 // Writer Code in Google Sheets//
