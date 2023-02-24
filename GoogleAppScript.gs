@@ -1,5 +1,5 @@
 var ss = SpreadsheetApp.openById('1Sh4X2OHtiQMyFYKY-SaKTny10IJK9kKY7zw_lAebd68');
-var sheet = ss.getActiveSheet();
+var sheet = ss.getSheetByName("Regular");
 var timezone = Session.getScriptTimeZone();
 var str = "";
 var dict = {"AdminSP" : "akhil20171@iiitd.ac.in", "AdminFA" : "akhil20171@iiitd.ac.in"}
@@ -121,9 +121,10 @@ function doPost(e){
 
         var range = "A"+index+":"+"J"+lastIndex;
         var cell_link = 'https://docs.google.com/spreadsheets/d/1Sh4X2OHtiQMyFYKY-SaKTny10IJK9kKY7zw_lAebd68/view#gid=0&range='+range;
+        var form_link = 'https://forms.gle/xx55P9fUjQMfikin7';
 
         var subject_Reader = "File : "+ value1+" scanned";
-        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been scanned successfully. Click here (" +cell_link+ ") to see the updated details.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been scanned successfully. Click here (" +cell_link+ ") to see the updated details.\n\nIf you wish to extend the deadline, please fill this form:\n\n"+form_link+"\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
         MailApp.sendEmail(dict[value2],subject_Reader,mail_body_Reader);
 
         var subject_sender = "File : "+ value1 +" received by "+ value2 +" ";
@@ -153,13 +154,13 @@ function doPost(e){
         var form_link = 'https://forms.gle/xx55P9fUjQMfikin7';
 
         var subject_Reader = "File : "+ value1+" scanned";
-        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been read scanned successfully. Click here (" +cell_link+ ") to see the updated  details.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been read scanned successfully. Click here (" +cell_link+ ") to see the updated  details.\n\nIf you wish to extend the deadline, please fill this form:\n\n"+form_link+"\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
         MailApp.sendEmail(dict[value2],subject_Reader,mail_body_Reader);
 
         var subject_sender = "File : "+ value1 +" received by "+ value2 +" ";
         var next_index = +index+1;
 
-        var mail_body_Sender  = "Dear "+ sheet.getRange("F"+next_index).getValue().toString() +" ,\n\nYour file( " + value1 + " ) has been received by "+ value2 +" . Click here (" +cell_link+ ") to see the updated details.\n\nIf you wish to extend the deadline, please fill this form:\n\n"+form_link+"\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+        var mail_body_Sender  = "Dear "+ sheet.getRange("F"+next_index).getValue().toString() +" ,\n\nYour file( " + value1 + " ) has been received by "+ value2 +" . Click here (" +cell_link+ ") to see the updated details.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
       
         MailApp.sendEmail(dict[sheet.getRange("F"+next_index).getValue().toString()],subject_sender,mail_body_Sender);
       }
