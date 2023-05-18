@@ -2,7 +2,7 @@ var ss = SpreadsheetApp.openById('1Sh4X2OHtiQMyFYKY-SaKTny10IJK9kKY7zw_lAebd68')
 var sheet = ss.getSheetByName("Regular");
 var timezone = Session.getScriptTimeZone();
 var str = "";
-var dict = {"AdminSP" : "akhil20171@iiitd.ac.in", "AdminFA" : "akhil20171@iiitd.ac.in"}
+var dict = {"AdminSP" : "khagendra@iiitd.ac.in", "AdminFA" : "khagendra@iiitd.ac.in"}
 
 function onFormSubmit(){
   var required_sheet = ss.getSheetByName("Responses");
@@ -121,11 +121,12 @@ function doPost(e){
 
         var range = "A"+index+":"+"J"+lastIndex;
         var cell_link = 'https://docs.google.com/spreadsheets/d/1Sh4X2OHtiQMyFYKY-SaKTny10IJK9kKY7zw_lAebd68/view#gid=0&range='+range;
-        var form_link = 'https://forms.gle/xx55P9fUjQMfikin7';
 
         var subject_Reader = "File : "+ value1+" scanned";
-        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been scanned successfully. Click here (" +cell_link+ ") to see the updated details.\n\nIf you wish to extend the deadline, please fill this form:\n\n"+form_link+"\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
-        MailApp.sendEmail(dict[value2],subject_Reader,mail_body_Reader);
+        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been scanned successfully. Click here (" +cell_link+ ") to see the updated details.\n\nIf you wish to extend the deadline, please fill this form.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+        var html = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdHiar1n7VdOmgdSHzNoLWE4jDwkSsK7NcRBq3dG3LxuN_sTg/viewform?embedded=true" width="640" height="768" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>';
+
+        MailApp.sendEmail(dict[value2],subject_Reader,mail_body_Reader,{htmlBody:html});
 
         var subject_sender = "File : "+ value1 +" received by "+ value2 +" ";
         var mail_body_Sender  = "Dear "+ sheet.getRange("B"+index).getValue().toString() +" ,\n\nYour file( " + value1 + " ) has been received by "+ value2 +" . Click here (" +cell_link+ ") to see the updated details.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
@@ -145,17 +146,18 @@ function doPost(e){
       
         var tempIndex = index+1;
         sheet.insertRowAfter(index);
-        sheet.getRange("F"+index+":"+"I"+index).copyValuesToRange(sheet.getRange("F"+index+":"+"I"+index).getGridId(),6,10,tempIndex,tempIndex);
-        sheet.getRange("F"+index+":"+"I"+index).clearContent();
+        sheet.getRange("F"+index+":"+"K"+index).copyValuesToRange(sheet.getRange("F"+index+":"+"K"+index).getGridId(),6,12,tempIndex,tempIndex);
+        sheet.getRange("F"+index+":"+"K"+index).clearContent();
         makeChanges(e,index,value2);
     
         var range = "A"+index+":"+"J"+lastIndex;
         var cell_link = 'https://docs.google.com/spreadsheets/d/1Sh4X2OHtiQMyFYKY-SaKTny10IJK9kKY7zw_lAebd68/view#gid=0&range='+range;
-        var form_link = 'https://forms.gle/xx55P9fUjQMfikin7';
 
         var subject_Reader = "File : "+ value1+" scanned";
-        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been read scanned successfully. Click here (" +cell_link+ ") to see the updated  details.\n\nIf you wish to extend the deadline, please fill this form:\n\n"+form_link+"\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
-        MailApp.sendEmail(dict[value2],subject_Reader,mail_body_Reader);
+        var mail_body_Reader =  "Dear "+ value2 +" ,\n\nYour file has been read scanned successfully. Click here (" +cell_link+ ") to see the updated  details.\n\nIf you wish to extend the deadline, please fill this form.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+        var html = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdHiar1n7VdOmgdSHzNoLWE4jDwkSsK7NcRBq3dG3LxuN_sTg/viewform?embedded=true" width="640" height="768" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>';
+
+        MailApp.sendEmail(dict[value2],subject_Reader,mail_body_Reader,{htmlBody:html});
 
         var subject_sender = "File : "+ value1 +" received by "+ value2 +" ";
         var next_index = +index+1;
@@ -205,7 +207,7 @@ function makeChanges(e,index,value2){
   //---------------------------------------------------------------------------------- 
 }
 
-function triggerOnEdit(){
+function delay(){
   for(var i = 3; i<sheet.getLastRow(); i++){
     if(!sheet.getRange("A"+i).isBlank()){
       if(sheet.getRange("J"+i).getValue()=="Finished"){
@@ -222,7 +224,6 @@ function triggerOnEdit(){
           var file_id = sheet.getRange("A"+index).getValue().toString();
           var range = "A"+index+":"+"J"+lastIndex;
           var cell_link = 'https://docs.google.com/spreadsheets/d/1Sh4X2OHtiQMyFYKY-SaKTny10IJK9kKY7zw_lAebd68/view#gid=0&range='+range;
-          var form_link = 'https://forms.gle/xx55P9fUjQMfikin7';
           var sender = "";
           var receiver = "";
 
@@ -237,9 +238,10 @@ function triggerOnEdit(){
           }
 
           var subject = "Reminder:- Please process the pending file (" + file_id +" )";
-          var body = "The file(" + file_id +") was submitted by "+ sender +" on the date-( "+sheet.getRange("G"+i).getValue()+" ) and has been in your department for the last * days( "+ baseDate+" ).   Click here ("+cell_link +") to see further details. If you wish to extend the deadline, please fill this form "+form_link+".\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+          var body = "The file(" + file_id +") was submitted by "+ sender +" on the date-( "+sheet.getRange("G"+i).getValue()+" ) and has been in your department for the last * days( "+ baseDate+" ).   Click here ("+cell_link +") to see further details. If you wish to extend the deadline, please fill this form.\n\nThanks for using smart office.\nRegards,\nIIITD smart office team";
+          var html = '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdHiar1n7VdOmgdSHzNoLWE4jDwkSsK7NcRBq3dG3LxuN_sTg/viewform?embedded=true" width="640" height="768" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>';
 
-          MailApp.sendEmail(dict[receiver],subject,body);
+          MailApp.sendEmail(dict[receiver],subject,body,{htmlBody:html});
         }
       }
     }
