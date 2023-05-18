@@ -9,10 +9,10 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-#define SCREEN_WIDTH 128    // OLED display width, in pixels
-#define SCREEN_HEIGHT 64    // OLED display height, in pixels
-#define OLED_RESET     -1   // Reset pin # (or -1 if sharing Arduino reset pin)
-#define SCREEN_ADDRESS 0x3C // See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+#define SCREEN_WIDTH    128   // OLED display width, in pixels
+#define SCREEN_HEIGHT    64   // OLED display height, in pixels
+#define OLED_RESET       -1   // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C   // See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 //-----------------------------------------
 constexpr uint8_t RST_PIN = D3;
@@ -26,8 +26,8 @@ MFRC522::MIFARE_Key key;
 MFRC522::StatusCode status;      
 //-----------------------------------------
 /* This is the actual data which is going to be written into the card */
-const String blockData = "AdminSP";
-//const String blockData = "AdminFA";
+//const String blockData = "AdminSP";
+const String blockData = "AdminFA";
 String card_uid;          
 //-----------------------------------------
 #define WIFI_SSID "FACULTY-STAFF-N"
@@ -36,7 +36,7 @@ String card_uid;
 // Google Sheets setup (do not edit)
 const char* HOST = "script.google.com";
 const int httpsPort = 443;
-String sheet_url = "/macros/s/AKfycby3ZPtmwHeU6SdLjsDpj-ofBVB4ihNQ_R1WuFSoI_FAUoDPbXuiTAHJuBaCGjaPpbFg/exec";
+String sheet_url = "/macros/s/AKfycbwpCzWZZq1Ez4MrRiUFZRts1piZ9Xs3wZr4JT-CEgxRbx2czi1CybH4XMmzbLu88C-e/exec";
 HTTPSRedirect* client = nullptr;
 String payload_base =  "{\"values\": ";
 String payload = "";
@@ -121,9 +121,6 @@ void setup(){
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(HOST);
-
-  delete client;    // delete HTTPSRedirect object
-  client = nullptr; // delete HTTPSRedirect object
   
   if(!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
     Serial.println(F("SSD1306 allocation failed"));
@@ -185,23 +182,6 @@ void loop(){
   Serial.println(mfrc522.PICC_GetTypeName(piccType));
   //--------------------------------------------------
   Serial.println();  
-
-  static bool flag = false;
-  if (!flag){
-    client = new HTTPSRedirect(httpsPort);
-    client->setInsecure();
-    flag = true;
-    client->setPrintResponseBody(true);
-    client->setContentTypeHeader("application/json");
-  }
-  if (client != nullptr){
-    if (!client->connected()){
-      client->connect(HOST, httpsPort);
-    }
-  }
-  else{
-    Serial.println("Error creating client object!");
-  }
 
   // Create json object string to send to Google Sheets
   payload = payload_base + "\"" + card_uid + "," + blockData + "\"}";
